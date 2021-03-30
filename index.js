@@ -22,7 +22,8 @@ const s3 = new AWS.S3({
 app.get('/api/pre-upload', (req, res) => {
     const url = s3.getSignedUrl('putObject', {
         Bucket: process.env.CELLAR_BUCKET,
-        Key: 'random.txt',
+        Key: 'cors.xml',
+        ContentType: 'application/xml',
         Expires: 60 * 5
     });
 
