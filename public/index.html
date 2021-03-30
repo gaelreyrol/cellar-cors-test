@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CORS Cellar</title>
+</head>
+<body>
+    <form id="form">
+        <input type="file" name="file" id="file" required>
+        <button>Send</button>
+    </form>
+    <script>
+        const sendFile = async (event) => {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('file');
+
+            const url = await fetch(window.location.href + 'api/pre-upload')
+                .then(response => response.json())
+                .then(data => data.data)
+                .catch(error => console.error(error));
+
+            if (!url) {
+                console.error('invalid url');
+                return ;
+            }
+
+            const formdata = new FormData();
+            formdata.append("", fileInput.files[0]);
+
+            const requestOptions = {
+                method: 'PUT',
+                body: formdata,
+                redirect: 'follow'
+            };
+
+            await fetch(url, requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+        };
+
+        document.getElementById('form').addEventListener('submit', sendFile);
+    </script>
+</body>
+</html>
